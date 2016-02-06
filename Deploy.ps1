@@ -55,6 +55,7 @@ $Context.Dispose()
 # Upload files in the style library (folders are created automatically by the PnP cmdlet)
 # -----------------
 Add-SPOFile -Path ".\Html\navbar.html" -Folder "/Style Library/NavigationSample/Html" -Checkout
+Add-SPOFile -Path ".\Html\contextualmenu.html" -Folder "/Style Library/NavigationSample/Html" -Checkout
 Add-SPOFile -Path ".\Js\Modules\module.navigation.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
 Add-SPOFile -Path ".\Js\Modules\module.taxonomy.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
 Add-SPOFile -Path ".\Js\Modules\module.templateloader.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout

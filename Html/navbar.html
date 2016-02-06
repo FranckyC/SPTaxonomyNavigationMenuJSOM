@@ -8,7 +8,10 @@
       </div>
     </li>
 	<!-- ko foreach: $parent.nodes -->
-	<li class="ms-NavBar-item ms-NavBar-item--hasMenu">
+	<li class="ms-NavBar-item ms-NavBar-item--hasMenu" data-bind ="css : { 'is-selected' : isCurrentNode }">
+		<!-- ko if: iconCssClass -->
+		<i class="ms-Icon" aria-hidden="true" data-bind="css: iconCssClass"></i>
+		<!-- /ko -->
 		<a class="ms-NavBar-link" data-bind="text: title, attr: { href: url }"></a>
 		<!-- ko if: hasChildren -->
 		<i class="ms-NavBar-chevronDown ms-Icon ms-Icon--chevronDown"></i>

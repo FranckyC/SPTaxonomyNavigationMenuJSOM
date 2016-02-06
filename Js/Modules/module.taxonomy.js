@@ -28,39 +28,81 @@ define([], function () {
 			var webNavigationTermSet = SP.Publishing.Navigation.NavigationTermSet.getAsResolvedByWeb(context, termSet, currentWeb, 'GlobalNavigationTaxonomyProvider');
 			context.load(webNavigationTermSet);
 
-			var firstLevelNavigationTerms = webNavigationTermSet.getWithNewView(termSetView).get_terms();
-			var allNavigationterms = webNavigationTermSet.getWithNewView(termSetView).getAllTerms();
+			// The 'getFirstLevelNavigationTerms' method is used to determine the first level of terms to build the tree from
+			getFirstLevelNavigationTerms(webNavigationTermSet, context, termSetView, restrictToCurrentTerm).done(function (firstLevelNavigationTerms){
+				
+				var allNavigationterms = webNavigationTermSet.getWithNewView(termSetView).getAllTerms();
+				context.load(allNavigationterms, 'Include(Id, Terms, Title, FriendlyUrlSegment)');
+				context.load(firstLevelNavigationTerms, 'Include(Id, Terms, Title, FriendlyUrlSegment)');
 
-			// Remove the potential '/' at the end of the URL
-			var currentUrl = window.location.pathname.replace(/\/$/g, '');
+				context.executeQueryAsync(function () {
 
-			// If the current URL is not equal to the root site URL
-			if (restrictToCurrentTerm && (currentUrl.localeCompare(_spPageContextInfo.siteServerRelativeUrl) != 0)) {
+					getTermNodesAsFlat(context, allNavigationterms).done(function (nodes) {
+						 
+						var navigationTree = getTermNodesAsTree(context, nodes, firstLevelNavigationTerms);
 
-				// Get the current navigation term from the URL
-				var currentTerm = webNavigationTermSet.findTermForUrl(currentUrl);
-				firstLevelNavigationTerms = currentTerm.get_parent().get_terms();
-			}
+						deferred.resolve(navigationTree);
 
-			context.load(allNavigationterms, 'Include(Id, Terms, Title, FriendlyUrlSegment)');
-			context.load(firstLevelNavigationTerms, 'Include(Id, Terms, Title, FriendlyUrlSegment)');
+					});
 
-			context.executeQueryAsync(function () {
-
-				getTermNodesAsFlat(context, allNavigationterms).done(function (nodes) {
-					 
-					var navigationTree = getTermNodesAsTree(context, nodes, firstLevelNavigationTerms);
-
-					deferred.resolve(navigationTree);
-
+				}, function (sender, args) {
+					deferred.reject(sender, args);
 				});
-
-			}, function (sender, args) {
-				deferred.reject(sender, args);
-			});
+				
+			});	
 
 			return deferred.promise();
 		};
+		
+		var getFirstLevelNavigationTerms = function (webNavigationTermSet, context, termSetView, restrictToCurrentTerm) {
+			
+			var deferred = new $.Deferred();
+			
+			var firstLevelNavigationTerms = webNavigationTermSet.getWithNewView(termSetView).get_terms();
+			
+			if (restrictToCurrentTerm) {
+				
+				// Remove the potential '/' at the end of the URL
+				var currentUrl = window.location.pathname.replace(/\/$/g, '');
+				
+				// If the current URL is not equal to the root site URL or is not an aspx page
+				if ((currentUrl.localeCompare(_spPageContextInfo.siteServerRelativeUrl) != 0) &&
+				(!/([.]aspx)/.test(currentUrl))) {
+					
+					// Get the current navigation term from the URL (server relative URL)
+					var currentNavigationTerm = webNavigationTermSet.findTermForUrl(currentUrl);
+															
+					var parent = currentNavigationTerm.get_parent();
+					context.load(parent);
+								
+					context.executeQueryAsync(function () {
+						
+						// Check if it is a first level term (root). In this case, we display the children
+						if (parent.get_serverObjectIsNull())
+						{
+							firstLevelNavigationTerms = currentNavigationTerm.get_terms();
+						}
+						else
+						{
+							// Display the siblings
+							firstLevelNavigationTerms = currentNavigationTerm.get_parent().get_terms();
+						}
+					
+						deferred.resolve(firstLevelNavigationTerms);
+
+					}, function (sender, args) {
+
+						deferred.reject(sender, args);
+					});			
+				}
+			}
+			else {
+				
+				deferred.resolve(firstLevelNavigationTerms);
+			}
+			
+			return deferred.promise()	
+		}
 
 		// Get the navigation hierarchy as a flat list
 		// This list will be used to easily find a node without dealing too much with asynchronous calls and recursion 
@@ -78,15 +120,29 @@ define([], function () {
 						"TaxonomyTerm": currentTerm,
 						"FriendlyUrlSegment": currentTerm.get_friendlyUrlSegment().get_value(),
 						"ChildNodes": [],
+						"IconCssClass" : "",
+						"IsCurrentNode" : false,
 					}
-
+					
+					// If the friendly URL segment matches the current URL segment, the node is the current node
+					var currentFriendlyUrlSegment = window.location.href.replace(/\/$/g, '').split('?')[0].split('/').pop();
+					if(currentFriendlyUrlSegment.localeCompare(termNode.FriendlyUrlSegment) == 0) {
+						 termNode.IsCurrentNode = true;
+					}
+					
 					getNavigationTermUrl(context, currentTerm).done(function (termUrl) {
 
-						termNode.Url = termUrl
-						termNodes.push(termNode);
-						i++;
-						termsEnumerator.moveNext();
-						getSingleTermNodeInfo(fn);
+						termNode.Url = termUrl;
+						
+						getNavigationTermIconCssClass(context, currentTerm).done(function (iconCssClass) {
+								
+							termNode.IconCssClass = iconCssClass;
+							termNodes.push(termNode);
+							i++;
+							termsEnumerator.moveNext();
+							getSingleTermNodeInfo(fn);
+						
+						}); 
 					});           
 				}
 				else
@@ -169,6 +225,27 @@ define([], function () {
 			return deferred.promise()
 		}
 		
+		var getNavigationTermIconCssClass = function (context, navigationTerm)	{
+			
+			var deferred = new $.Deferred();
+			
+			var taxonomyTerm = navigationTerm.getTaxonomyTerm();
+
+			context.load(taxonomyTerm, 'CustomProperties');
+
+			context.executeQueryAsync(function () {
+
+				var iconCssClass = taxonomyTerm.get_objectData().get_properties()["CustomProperties"]["IconCssClass"] != undefined ? taxonomyTerm.get_objectData().get_properties()["CustomProperties"]["IconCssClass"] : "";
+			
+				deferred.resolve(iconCssClass);
+
+			}, function (sender, args) {
+
+				deferred.reject(sender, args);
+			});
+
+			return deferred.promise()			
+		}
 	};
 	
 	return taxonomyModule;	

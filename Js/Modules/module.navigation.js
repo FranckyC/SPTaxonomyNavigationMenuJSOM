@@ -28,8 +28,10 @@ define(['jQuery','Knockout'], function ($, ko) {
 
 			self.title = ko.observable(node.Title);
 			self.url = ko.observable(node.Url);
+			self.iconCssClass = ko.observable(node.IconCssClass);
 			self.hasChildren = ko.observable(node.ChildNodes.length > 0);
 			self.children = ko.observableArray();
+			self.isCurrentNode = ko.observable(node.IsCurrentNode);
 
 			populateObservableNodeArray(node.ChildNodes, self.children);
 		};
@@ -38,6 +40,11 @@ define(['jQuery','Knockout'], function ($, ko) {
 		ko.components.register('navbar-component', {
 			template: { fromUrl: 'navbar.html' },
 		});	
+		
+		// Register the contextual menu component
+		ko.components.register('contextualmenu-component', {
+			template: { fromUrl: 'contextualmenu.html' },
+		});
 
 		// We need a custom knockout binding to ensure DOM manipulations execute after the nav bar rendering (see the navbar.html file)
 		ko.bindingHandlers.loadSearchBox = {
@@ -46,7 +53,7 @@ define(['jQuery','Knockout'], function ($, ko) {
 						// Hide the OOTB search box						
 						$("#searchInputBox").hide();
 						
-						// Deactivate all OOTB events (we just want to be able to put some keywords here and redirect to the search results page, no fancy features like scopes, etc.)
+						// Deactivate all OOTB events (we just want to be able to put some keywords here and redirect to the search results page, no fancy features like scopes,  search button etc.)
 						$("#searchInputBox input").prop('onfocus',null).off('focus');
 						$("#searchInputBox input").prop('onblur',null).off('blur');
 						$("#searchInputBox input").prop('onkeydown',null).off('keydown');
@@ -57,7 +64,7 @@ define(['jQuery','Knockout'], function ($, ko) {
 						// Remove the default value "Search this site..."
 						$("#searchInputBox input").val("");
 
-						// Add to the nav bar
+						// Add the input only to the nav bar
 						$(elem).append($("#searchInputBox input"));					
 				  }
 			}		

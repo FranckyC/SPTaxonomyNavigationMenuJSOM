@@ -14,8 +14,6 @@
       // Set selected states.
       $contextualMenu.on('click', '.ms-ContextualMenu-link:not(.is-disabled)', function(event) {
 		  
-		// Allow the click
-
         // Check if multiselect - set selected states
         if ($contextualMenu.hasClass('ms-ContextualMenu--multiselect')) {
 
@@ -42,7 +40,7 @@
           // If this item has a menu, open it.
           if ($(this).hasClass('ms-ContextualMenu-link--hasMenu')) {
 			  	
-			// Allow the click to the initial href only if there are children			
+			// Allow the click to the initial href only if there are no children			
 			event.preventDefault();	
 			
             $(this).siblings('.ms-ContextualMenu:first').addClass('is-open');

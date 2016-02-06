@@ -81,7 +81,7 @@ require(['domReady!',
 		function (domReady, $, ko, navbarModuleRef, taxonomyModuleRef, templateloaderModuleRef) {
 
 	// At this moment, the DOM is already ready ;) (via domReady! dependency)
-
+	
 	// Register Knockout components
 	var templateloaderModule = new templateloaderModuleRef();
 	templateloaderModule.initialize();
@@ -112,6 +112,28 @@ require(['domReady!',
 			
 			// Apply bindings only to the navbar component
 			ko.applyBindings(navbarModule, $(".ms-NavBar")[0]);	
+			
+			// Contextual menu
+			taxonomyModule.getGlobalNavigationTaxonomyNodes("52d6944d-bd98-48c1-ba45-57d4efe2f941", true)
+				.done(function (navigationTree) {
+
+					var navbarModule = new navbarModuleRef();					
+					navbarModule.initialize(navigationTree);	
+					
+					// Check if the contexutal menu tag is present
+					if ($(".contextualmenu-component").length > 0)
+					{
+						$(".contextualmenu-component").ContextualMenu();
+						
+						// Can't use custom element '<contextualmenu-component>' in SharePoint HTML source so we use the classic syntax with custom class instead
+						// To add the contextual menu on a page insert the following html
+						// <div class="contextualmenu-component" data-bind='component : "contextualmenu-component"'></div>
+						
+						// Apply bindings only to the navbar component
+						ko.applyBindings(navbarModule, $(".contextualmenu-component")[0]);	
+					}			
+			});	
+			
 						
 	});	
 });
