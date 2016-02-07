@@ -102,7 +102,7 @@ require(['domReady!',
 	var taxonomyModule = new taxonomyModuleRef();
 
 	// Initialize the navigation menu with taxonomy terms
-	// If the second parameter is true, it restricts nodes to the current navigation term (use this for a contextual menu)
+	// If the second parameter is true, it restricts nodes to the current navigation term (used for the contextual menu)
 	// For this example, we use the "Site map" term set
 	taxonomyModule.getGlobalNavigationTaxonomyNodes("52d6944d-bd98-48c1-ba45-57d4efe2f941", false)
 		.done(function (navigationTree) {
@@ -125,15 +125,13 @@ require(['domReady!',
 					{
 						$(".contextualmenu-component").ContextualMenu();
 						
-						// Can't use custom element '<contextualmenu-component>' in SharePoint HTML source so we use the classic syntax with custom class instead
-						// To add the contextual menu on a page insert the following html
+						// We can't use the custom element '<contextualmenu-component>' in SharePoint HTML source (removed automatically) so we use the classic syntax with custom CSS class instead
+						// To add the contextual menu on a page insert the following HTML snippet:
 						// <div class="contextualmenu-component" data-bind='component : "contextualmenu-component"'></div>
 						
 						// Apply bindings only to the navbar component
 						ko.applyBindings(navbarModule, $(".contextualmenu-component")[0]);	
 					}			
-			});	
-			
-						
+			});				
 	});	
 });
