@@ -5,7 +5,6 @@ define([], function () {
 	
 	var taxonomyModule = function(){
 	
-		// TODO: Implement cache mecanism for faster loading?
 		this.getGlobalNavigationTaxonomyNodes = function (termSetId, restrictToCurrentTerm) {
 
 			var deferred = new $.Deferred();
@@ -27,7 +26,8 @@ define([], function () {
 			// The method 'getTermSetForWeb' gets the cached read only version of the term set
 			// https://msdn.microsoft.com/EN-US/library/office/microsoft.sharepoint.publishing.navigation.taxonomynavigation.gettermsetforweb.aspx
 			// Ex: var webNavigationTermSet = SP.Publishing.Navigation.TaxonomyNavigation.getTermSetForWeb(context, currentWeb, 'GlobalNavigationTaxonomyProvider', true);
-			// In our case, we use 'getAsResolvedByWeb' method instead to retrieve a taxonomy term set as a navigation term set regardless if it is bound to the current web. The downside of this approach is that the results are not retrieved from cache causing performance impacts om the initial loading
+			// In our case, we use 'getAsResolvedByWeb' method instead to retrieve a taxonomy term set as a navigation term set regardless if it is bound to the current web.
+            // The downside of this approach is that the results are not retrieved from the navigation cache that can cause performance issues during the initial load
 			var webNavigationTermSet = SP.Publishing.Navigation.NavigationTermSet.getAsResolvedByWeb(context, termSet, currentWeb, 'GlobalNavigationTaxonomyProvider');
             
             // Apply the view filters
