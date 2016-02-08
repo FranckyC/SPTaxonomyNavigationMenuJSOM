@@ -84,10 +84,10 @@ define([], function () {
 								
 					context.executeQueryAsync(function () {
 						
-						// Check if it is a first level term (root). In this case, we display the children
+						// Check if it is a first level term (root). In this case, we display the children of the whole term set (1st level)
 						if (parent.get_serverObjectIsNull())
 						{
-							firstLevelNavigationTerms = currentNavigationTerm.get_terms();
+							firstLevelNavigationTerms = currentNavigationTerm.get_termSet().get_terms();
 						}
 						else
 						{
