@@ -31,7 +31,19 @@ define(['jQuery','Knockout'], function ($, ko) {
 			self.iconCssClass = ko.observable(node.IconCssClass);
 			self.hasChildren = ko.observable(node.ChildNodes.length > 0);
 			self.children = ko.observableArray();
-			self.isCurrentNode = ko.observable(node.IsCurrentNode);
+            self.friendlyUrlSegment = ko.observable(node.FriendlyUrlSegment);          
+            self.isCurrentNode = ko.pureComputed(function() {
+               
+                var isCurrent = false;
+                
+                // If the friendly URL segment matches the current URL segment, the node is the current node
+                var currentFriendlyUrlSegment = window.location.href.replace(/\/$/g, '').split('?')[0].split('/').pop();
+                if(currentFriendlyUrlSegment.localeCompare(self.friendlyUrlSegment()) == 0) {
+                    isCurrent = true;
+                }
+                return isCurrent;
+                
+            }, this);
 
 			populateObservableNodeArray(node.ChildNodes, self.children);
 		};

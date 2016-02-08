@@ -134,15 +134,8 @@ define([], function () {
 						"FriendlyUrlSegment": currentTerm.get_friendlyUrlSegment().get_value(),
 						"ChildNodes": [],
 						"IconCssClass" : "",
-						"IsCurrentNode" : false,
 					}
-					
-					// If the friendly URL segment matches the current URL segment, the node is the current node
-					var currentFriendlyUrlSegment = window.location.href.replace(/\/$/g, '').split('?')[0].split('/').pop();
-					if(currentFriendlyUrlSegment.localeCompare(termNode.FriendlyUrlSegment) == 0) {
-						 termNode.IsCurrentNode = true;
-					}
-					
+									
 					getNavigationTermUrl(context, currentTerm).then(function (termUrl) {
 
 						termNode.Url = termUrl;
