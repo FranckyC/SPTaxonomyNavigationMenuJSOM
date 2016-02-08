@@ -4,6 +4,12 @@
 
 ----------
 
+### Complete description
+
+The complete description of key points of this example is available here:
+
+- [Associated blog post (FRENCH)](http://thecollaborationcorner.com/2016/02/09/creer-un-menu-de-navigation-par-taxonomie-pour-sharepoint-online-en-utilisant-jsom-et-office-ui-fabric)
+
 ### Summary
 
 This is an example of a taxonomy navigation menu for SharePoint Online using Office UI Fabric and JSOM. Here are the key points of this solution:
