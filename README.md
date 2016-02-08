@@ -28,6 +28,8 @@ This is an example of a taxonomy navigation menu for SharePoint Online using Off
 
 - The source term set for the menu don't have to be necessarily the term set used for the web navigation (for example in the case you only want simple links in your menu). However, to benefit of the friendly URLs, you can use directly the navigation term set configured for the navigation (like this example) **OR** a term set that reuses terms from it to get friendly URLs work.
 
+- The browser local storage is used in this example to show how to cache the main menu navigation nodes
+
 Feel free to extend the current code to meet you requirements. Enjoy!
 
 ### Final result
@@ -54,12 +56,12 @@ Before starting, you need to install some prerequisites:
 ### Installation
 
 - Download the source code as ZIP from GitHUb and extract it to your destination folder
-- Call the `Deploy.ps1` script with your parameters like this:
+- Start a PowerShell session as an administrator an call the `Deploy.ps1` script with your parameters like this:
 
 ```csharp
 $UserName = "username@<your_tenant>.onmicrosoft.com"
 $Password = "<your_password>"
-$SiteUrl = "https://<your_tenant>.sharepoint.com/sites/<your_site_colelction>"
+$SiteUrl = "https://<your_tenant>.sharepoint.com/sites/<your_site_collection>"
 
 Set-Location "<your_installation_folder>\SPTaxonomyNavigationMenuJSOM"
 
@@ -87,6 +89,11 @@ taxonomyModule.getGlobalNavigationTaxonomyNodes("<your_term_set_id>", false)
 $SiteMapTermSetId = "<your_term_set_id>"
 ...
 ```
+
+Main menu nodes are cached in the browser local storage. To clear the local storage value, just delete the value `navbarNodes` and reload the page. Note that you can easily remove this logic in the `main.js` script if it doesn't fit your needs:
+
+![Delete the local storage value](http://thecollaborationcorner.com/wp-content/uploads/2016/02/final_local_storage.png)
+
 #### Icons configuration
 
 For each navigation term, you can configure an specific icon from the [Office UI Fabric styles](http://dev.office.com/fabric/styles), to do so, just add the "IconCssClas" custom property with the desired Css class. 
