@@ -56,6 +56,7 @@ $Context.Dispose()
 # -----------------
 Add-SPOFile -Path ".\Html\navbar.html" -Folder "/Style Library/NavigationSample/Html" -Checkout
 Add-SPOFile -Path ".\Html\contextualmenu.html" -Folder "/Style Library/NavigationSample/Html" -Checkout
+Add-SPOFile -Path ".\Js\Modules\module.utility.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
 Add-SPOFile -Path ".\Js\Modules\module.navigation.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
 Add-SPOFile -Path ".\Js\Modules\module.taxonomy.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
 Add-SPOFile -Path ".\Js\Modules\module.templateloader.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
