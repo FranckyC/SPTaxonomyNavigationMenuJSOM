@@ -39,9 +39,7 @@ define(['jQuery',
             
             // Make sure there is a value in the cache
             if (JSON.parse(localStorage.mainMenuNodes).length > 0) {              
-                // Load navigation tree from the local storage browser cache
-                self.initialize(JSON.parse(localStorage.mainMenuNodes));    
-                     
+                    
                 // Contextual menu nodes are deduced from the main menu
                 // The contextual menu is like the 'current navigation' in SharePoint, so you can configure visibility for each node in the term store
                 var nodes = JSON.parse(localStorage.mainMenuNodes);      
@@ -64,8 +62,7 @@ define(['jQuery',
                                                         
                 self.initialize(navigationTree);
                 
-                isCached = true;     
-                     	                 
+                isCached = true;                        	                 
             }
         }
 
@@ -81,7 +78,6 @@ define(['jQuery',
             }).fail(function(sender, args) {
                 console.log('Error. ' + args.get_message() + '\n' + args.get_stackTrace());
             });
-            
         }
     }
   
