@@ -32,6 +32,8 @@ This is an example of a taxonomy navigation menu for SharePoint Online using Off
 
 - Both friendly URLs and simple link URLs are supported 
 
+- Global and Current navigation visibility settings for each term are supported. You can use these properties in your HTML views (see `Templates\template.mainmenu.html` to see an example).
+
 - The source term set for the menu don't have to be necessarily the term set used for the web navigation (for example in the case you only want simple links in your menu). However, to benefit of the friendly URLs, you can use directly the navigation term set configured for the navigation (like this example) **OR** a term set that reuses terms from it to get friendly URLs work.
 
 - The browser local storage is used in this example to show how to cache the main menu navigation nodes
@@ -80,12 +82,11 @@ $Script = ".\Deploy.ps1"
 
 #### Use navigation menu with your own term set
 
-By default, the term set used for the menu is the sample term set provisioned with this example. You can use your own term set by specifying the the id in the `main.js` script like this:
+By default, the term set used for the menu is the sample term set provisioned with this example. You can use your own term set by specifying the the id in the DOM element for the component (see `main.js` script to see an example) :
 
-```javascript
+```html
 ...
-taxonomyModule.getGlobalNavigationTaxonomyNodes("<your_term_set_id>", false)
-		.done(function (navigationTree) {
+<component-mainmenu params='termSetId: "52d6944d-bd98-48c1-ba45-57d4efe2f941"'></component-mainmenu>
 ...
 ```
 
@@ -95,10 +96,11 @@ taxonomyModule.getGlobalNavigationTaxonomyNodes("<your_term_set_id>", false)
 $SiteMapTermSetId = "<your_term_set_id>"
 ...
 ```
+Your term set must be flagged as a navigation term set.
 
-Main menu nodes are cached in the browser local storage. To clear the local storage value, just delete the value `navbarNodes` and reload the page. Note that you can easily remove this logic in the `main.js` script if it doesn't fit your needs:
+Main menu nodes are cached in the browser local storage. To clear the local storage value, just delete the value `mainMenuNodes` and reload the page.
 
-![Delete the local storage value](http://thecollaborationcorner.com/wp-content/uploads/2016/02/final_local_storage.png)
+![Delete the local storage value](http://thecollaborationcorner.com/wp-content/uploads/2016/02/final_local_storage2.png)
 
 #### Icons configuration
 
@@ -112,10 +114,12 @@ In this example, only the first menu level display icons.
 
 You can add a contextual menu to your page by adding the following HTML markup in a SharePoint page (in a Script Editor Web Part or in a rich HTML field).
 
-`<div class="contextualmenu-component" data-bind='component : "contextualmenu-component"'></div>`
+`<component-contextualmenu params='termSetId: "52d6944d-bd98-48c1-ba45-57d4efe2f941"'></component-contextualmenu>`
 
-The main JavaScript will look for this specific component add dynamically add the contextual menu to your page:
+The main JavaScript will look for this specific DOM element add dynamically add the contextual menu to your page:
 
 ![Contextual menu](http://thecollaborationcorner.com/wp-content/uploads/2016/02/final_taxonomy_menu_contextual.png)
 
-To get this work, you have to configure your term driven pages correctly according to the friendly URLs
+To get this work, you have to configure your term driven pages correctly according to the friendly URLs.
+
+Is the case of main menu nodes are already present in the cache, the nodes for the contextual menu are deduced from it to improve loading performance.
