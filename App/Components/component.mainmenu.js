@@ -14,6 +14,7 @@ define(['jQuery',
     function mainMenuComponent(params) {
                 
         var self = this;
+        var isCached = false;
         
         // Use the existing navigation view model intialized with the term set id passed as parameter in the DOM element
         ko.utils.extend(self, new NavigationViewModelRef());
@@ -26,23 +27,30 @@ define(['jQuery',
                 
         if (localStorage.mainMenuNodes != null) {
 
-            // Load navigation tree from the local storage browser cache
-            self.initialize(JSON.parse(localStorage.mainMenuNodes));	                 
+            // Make sure there is a value in the cache
+            if (JSON.parse(localStorage.mainMenuNodes).length > 0) {               
+                // Load navigation tree from the local storage browser cache
+                self.initialize(JSON.parse(localStorage.mainMenuNodes));    
+                
+                isCached = true;            
+            }          
         }
-        else {
-                // Initialize the main menu with taxonomy terms            
-                taxonomyModule.getNavigationTaxonomyNodes(params.termSetId, false)
-                    .done(function (navigationTree) {
-                        
-                        // Initialize the mainMenu view model
-                        self.initialize(navigationTree);
-                                                                        
-                        // Set the navigation tree in the local storage of the browser
-                        localStorage.mainMenuNodes = utilityModule.stringifyTreeObject(navigationTree);
-                                                
-                }).fail(function(sender, args) {
-                    console.log('Error. ' + args.get_message() + '\n' + args.get_stackTrace());
-                });
+        
+        if (!isCached) {
+            
+            // Initialize the main menu with taxonomy terms            
+            taxonomyModule.getNavigationTaxonomyNodes(params.termSetId, false)
+                .done(function (navigationTree) {
+                    
+                    // Initialize the mainMenu view model
+                    self.initialize(navigationTree);
+                                                                    
+                    // Set the navigation tree in the local storage of the browser
+                    localStorage.mainMenuNodes = utilityModule.stringifyTreeObject(navigationTree);
+                                            
+            }).fail(function(sender, args) {
+                console.log('Error. ' + args.get_message() + '\n' + args.get_stackTrace());
+            });
         }
                      
         // We need a custom knockout binding to ensure DOM manipulations execute after the nav bar rendering (see the template.mainmenu.html file)
