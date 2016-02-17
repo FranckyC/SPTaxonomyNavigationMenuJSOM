@@ -54,26 +54,28 @@ $Context.Dispose()
 # -----------------
 # Upload files in the style library (folders are created automatically by the PnP cmdlet)
 # -----------------
-Add-SPOFile -Path ".\Html\navbar.html" -Folder "/Style Library/NavigationSample/Html" -Checkout
-Add-SPOFile -Path ".\Html\contextualmenu.html" -Folder "/Style Library/NavigationSample/Html" -Checkout
-Add-SPOFile -Path ".\Js\Modules\module.utility.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
-Add-SPOFile -Path ".\Js\Modules\module.navigation.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
-Add-SPOFile -Path ".\Js\Modules\module.taxonomy.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
-Add-SPOFile -Path ".\Js\Modules\module.templateloader.js" -Folder "/Style Library/NavigationSample/Js/Modules" -Checkout
-Add-SPOFile -Path ".\Js\OfficeUI\Jquery.NavBar.js" -Folder "/Style Library/NavigationSample/Js/OfficeUI" -Checkout
-Add-SPOFile -Path ".\Js\OfficeUI\Jquery.ContextualMenu.js" -Folder "/Style Library/NavigationSample/Js/OfficeUI" -Checkout
-Add-SPOFile -Path ".\Js\main.js" -Folder "/Style Library/NavigationSample/Js" -Checkout
-Add-SPOFile -Path ".\Js\require.js" -Folder "/Style Library/NavigationSample/Js" -Checkout
-Add-SPOFile -Path ".\Js\Lib\jquery-2.2.0.min.js" -Folder "/Style Library/NavigationSample/Js/Lib/" -Checkout
-Add-SPOFile -Path ".\Js\Lib\knockout-3.4.0.js"-Folder "/Style Library/NavigationSample/Js/Lib/" -Checkout
-Add-SPOFile -Path ".\Js\Plugins\domReady.js"-Folder "/Style Library/NavigationSample/Js/Plugins/" -Checkout
+Add-SPOFile -Path ".\App\Templates\template.mainmenu.html" -Folder "/Style Library/NavigationSample/App/Templates" -Checkout
+Add-SPOFile -Path ".\App\Templates\template.contextualmenu.html" -Folder "/Style Library/NavigationSample/App/Templates" -Checkout
+Add-SPOFile -Path ".\App\ViewModels\viewmodel.navigation.js" -Folder "/Style Library/NavigationSample/App/ViewModels" -Checkout
+Add-SPOFile -Path ".\App\Modules\module.taxonomy.js" -Folder "/Style Library/NavigationSample/App/Modules" -Checkout
+Add-SPOFile -Path ".\App\Modules\module.utility.js" -Folder "/Style Library/NavigationSample/App/Modules" -Checkout
+Add-SPOFile -Path ".\App\OfficeUI\Jquery.NavBar.js" -Folder "/Style Library/NavigationSample/App/OfficeUI" -Checkout
+Add-SPOFile -Path ".\App\OfficeUI\Jquery.ContextualMenu.js" -Folder "/Style Library/NavigationSample/App/OfficeUI" -Checkout
+Add-SPOFile -Path ".\App\main.js" -Folder "/Style Library/NavigationSample/App" -Checkout
+Add-SPOFile -Path ".\App\require.js" -Folder "/Style Library/NavigationSample/App" -Checkout
+Add-SPOFile -Path ".\App\Lib\jquery-2.2.0.min.js" -Folder "/Style Library/NavigationSample/App/Lib/" -Checkout
+Add-SPOFile -Path ".\App\Lib\knockout-3.4.0.js" -Folder "/Style Library/NavigationSample/App/Lib/" -Checkout
+Add-SPOFile -Path ".\App\Plugins\domReady.js" -Folder "/Style Library/NavigationSample/App/Plugins/" -Checkout
+Add-SPOFile -Path ".\App\Plugins\text.js" -Folder "/Style Library/NavigationSample/App/Plugins/" -Checkout
+Add-SPOFile -Path ".\App\Components\component.contextualmenu.js" -Folder "/Style Library/NavigationSample/App/Components/" -Checkout
+Add-SPOFile -Path ".\App\Components\component.mainmenu.js"-Folder "/Style Library/NavigationSample/App/Components/" -Checkout
 
 # -----------------
 # Add CSS and Js links to all pages
 # -----------------
 $OfficeUiCoreCss = "document.write('<link rel=""stylesheet"" href=""https://appsforoffice.microsoft.com/fabric/1.0/fabric.min.css""/>');"
 $OfficeUiComponentsCss = "document.write('<link rel=""stylesheet"" href=""https://appsforoffice.microsoft.com/fabric/1.0/fabric.components.min.css""/>');"
-$RequireJs = "document.write('<script data-main=""$SiteUrl/Style Library/NavigationSample/Js/main"" src=""$SiteUrl/Style Library/NavigationSample/Js/require.js""><\/script>');"
+$RequireJs = "document.write('<script data-main=""$SiteUrl/Style Library/NavigationSample/App/main"" src=""$SiteUrl/Style Library/NavigationSample/App/require.js""><\/script>');"
 
 Remove-SPOJavaScriptLink -Name OfficeUiCoreCss -Scope Site -Force
 Remove-SPOJavaScriptLink -Name OfficeUiComponentsCss -Scope Site -Force
