@@ -41,7 +41,7 @@ define(['jQuery',
             var nodes = JSON.parse(localStorage.mainMenuNodes);      
             var navigationTree = nodes;
                        
-            // Get the current node form the current URL
+            // Get the current node from the current URL
             var currentFriendlyUrlSegment = window.location.href.replace(/\/$/g, '').split('?')[0].split('/').pop();
             var currentNode = getNodeByFriendlyUrlSegment(nodes, currentFriendlyUrlSegment);
             
