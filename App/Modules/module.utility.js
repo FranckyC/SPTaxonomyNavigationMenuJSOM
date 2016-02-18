@@ -40,7 +40,7 @@ define([], function () {
         
         this.getCurrentFriendlyUrlSegment = function () {
             
-            var currentFriendlyUrlSegment = window.location.href.replace(/\/$/g, '').split('?')[0].split('/').pop();
+            var currentFriendlyUrlSegment = window.location.href.replace(/\/$|#/g, '').split('?')[0].split('/').pop();
             
             return currentFriendlyUrlSegment;
         }
