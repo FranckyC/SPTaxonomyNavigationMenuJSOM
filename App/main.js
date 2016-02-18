@@ -14,6 +14,7 @@ require.config({
 		// They can alternatively loaded by CDN (See https://github.com/requirejs/example-jquery-cdn)
         'jQuery': 'Lib/jquery-2.2.0.min',
         'Knockout': 'Lib/knockout-3.4.0',
+        'Amplify': 'Lib/amplify.min',
 		        
 		// RequireJS Plugins
 		// We use domReady RequireJS plugin instead of $(document).ready()
@@ -44,6 +45,10 @@ require.config({
         'Knockout': {
 			deps: ['jQuery'],
             exports: 'ko'
+        },
+        
+        'Amplify': {
+            exports: 'amplify'
         },
 		
 		'SP_Js' : {
@@ -79,7 +84,7 @@ require(['domReady!',
 		function (domReady, $, ko) {
             
 	// At this moment, the DOM is already ready ;) (via domReady! dependency)
-      
+          
     // Register all navigation components
     // Add your component registration here  
     // Components files are loaded on demand via Require JS

@@ -3,12 +3,11 @@
 // ====================
 define(['jQuery',
         'Knockout',
-        'text!Templates/template.breadcrumb.html', 
+        'Amplify',
+        'text!Templates/template.breadcrumb.html',
         'NavigationViewModel',
-        'TaxonomyModule',
-        'UtilityModule'], function($, ko, htmlTemplate, NavigationViewModelRef, TaxonomyModuleRef, UtilityModuleRef) {
+        'UtilityModule'], function($, ko, amplify, htmlTemplate, NavigationViewModelRef, UtilityModuleRef) {
     
-    var taxonomyModule = new TaxonomyModuleRef();
     var utilityModule = new UtilityModuleRef();
         
     var getBreadcrumbNodes = function (nodes) {
@@ -38,39 +37,15 @@ define(['jQuery',
     function breadcrumbComponent(params) {
                 
         var self = this;
-        var isCached = false;
         
         // Use the existing navigation view model intialized with the term set id passed as parameter in the DOM element
         ko.utils.extend(self, new NavigationViewModelRef());
                         
-       if (localStorage.mainMenuNodes != null) {
-            
-            // Make sure there is a value in the cache
-            if (JSON.parse(localStorage.mainMenuNodes).length > 0) {              
-                    
-                // Breadcrumb menu nodes are deduced from the main menu
-                var nodes = JSON.parse(localStorage.mainMenuNodes);          
-                                                        
-                self.initialize(getBreadcrumbNodes(nodes));
-                
-                isCached = true;                        	                 
-            }
-        }
-        
-        if (!isCached) {
-            
-            // Get all the nodes from the main menu    
-            taxonomyModule.getNavigationTaxonomyNodes(params.termSetId, false)
-                .done(function (navigationTree) {
-                    
-                    self.initialize(getBreadcrumbNodes(navigationTree));                                                               
-                                            
-            }).fail(function(sender, args) {
-                console.log('Error. ' + args.get_message() + '\n' + args.get_stackTrace());
-            });
-        }                   
-    }
-  
+        // Subscribe to the main menu nodes
+        amplify.subscribe( "mainMenuNodes", function(data) {
+            self.initialize(getBreadcrumbNodes(data.nodes));
+        });
+    }                      
     // Return component definition
     return { viewModel: breadcrumbComponent, template: htmlTemplate };
 });

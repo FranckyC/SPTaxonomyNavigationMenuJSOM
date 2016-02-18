@@ -34,91 +34,30 @@ define([], function () {
             
             // Apply the view filters
             webNavigationTermSet = webNavigationTermSet.getWithNewView(termSetView);
+
+            var firstLevelNavigationTerms = webNavigationTermSet.get_terms();
+            var allNavigationterms = webNavigationTermSet.getAllTerms();
             
-			context.load(webNavigationTermSet);
+            context.load(allNavigationterms, 'Include(Id, Terms, Title, FriendlyUrlSegment, ExcludeFromCurrentNavigation, ExcludeFromGlobalNavigation)');
+            context.load(firstLevelNavigationTerms, 'Include(Id, Terms, Title, FriendlyUrlSegment, ExcludeFromCurrentNavigation, ExcludeFromGlobalNavigation)');
 
-			// The 'getFirstLevelNavigationTerms' method is used to determine the first level of terms to build the tree from
-			getFirstLevelNavigationTerms(webNavigationTermSet, context, restrictToCurrentTerm).then(function (firstLevelNavigationTerms){
+            context.executeQueryAsync(function () {
+
+                getTermNodesAsFlat(context, allNavigationterms).then(function (nodes) {
+                        
+                    var navigationTree = getTermNodesAsTree(context, nodes, firstLevelNavigationTerms, null);
+
+                    deferred.resolve(navigationTree);
+
+                }, onError);
+
+            }, function (sender, args) {
+                deferred.reject(sender, args);
+            });
 				
-				var allNavigationterms = webNavigationTermSet.getAllTerms();
-				context.load(allNavigationterms, 'Include(Id, Terms, Title, FriendlyUrlSegment, ExcludeFromCurrentNavigation, ExcludeFromGlobalNavigation)');
-				context.load(firstLevelNavigationTerms, 'Include(Id, Terms, Title, FriendlyUrlSegment, ExcludeFromCurrentNavigation, ExcludeFromGlobalNavigation)');
-
-				context.executeQueryAsync(function () {
-
-					getTermNodesAsFlat(context, allNavigationterms).then(function (nodes) {
-						 
-						var navigationTree = getTermNodesAsTree(context, nodes, firstLevelNavigationTerms, null);
-
-						deferred.resolve(navigationTree);
-
-					}, onError);
-
-				}, function (sender, args) {
-					deferred.reject(sender, args);
-				});
-				
-			}, onError);	
-
 			return deferred.promise();
 		};
 		
-		var getFirstLevelNavigationTerms = function (webNavigationTermSet, context, restrictToCurrentTerm) {
-			
-			var deferred = new $.Deferred();
-			
-			var firstLevelNavigationTerms = webNavigationTermSet.get_terms();
-			
-			if (restrictToCurrentTerm) {
-				
-				// Remove the potential '/' at the end of the URL
-				var currentUrl = window.location.pathname.replace(/\/$/g, '');
-				
-				// If the current URL is not equal to the root site URL or is not an aspx page
-				if ((currentUrl.localeCompare(_spPageContextInfo.siteServerRelativeUrl) != 0) &&
-				(!/([.]aspx)/.test(currentUrl))) {
-					
-					// Get the current navigation term from the URL (server relative URL)
-					var currentNavigationTerm = webNavigationTermSet.findTermForUrl(currentUrl);
-															
-					var parent = currentNavigationTerm.get_parent();
-					context.load(parent);
-								
-					context.executeQueryAsync(function () {
-						
-						// Check if it is a first level term (root). In this case, we display the children of the whole term set (1st level)
-						if (parent.get_serverObjectIsNull())
-						{
-							firstLevelNavigationTerms = currentNavigationTerm.get_termSet().get_terms();
-						}
-						else
-						{
-							// Display the siblings
-							firstLevelNavigationTerms = currentNavigationTerm.get_parent().get_terms();
-						}
-					
-						deferred.resolve(firstLevelNavigationTerms);
-
-					}, function (sender, args) {
-
-						deferred.reject(sender, args);
-					});			
-				}
-                else {
-				
-                    // Return first level from the root
-				    deferred.resolve(firstLevelNavigationTerms);
-			    }
-			}
-			else {
-                
-				// Return first level from the root
-				deferred.resolve(firstLevelNavigationTerms);
-			}
-			
-			return deferred.promise()	
-		}
-
 		// Get the navigation hierarchy as a flat list
 		// This list will be used to easily find a node without dealing too much with asynchronous calls and recursion 
 		var getTermNodesAsFlat = function (context, allTerms) {

@@ -3,14 +3,14 @@
 // ====================
 define(['jQuery',
         'Knockout',
+        'Amplify',
         'text!Templates/template.mainmenu.html', 
         'NavigationViewModel',
         'TaxonomyModule',
         'UtilityModule',  
         'OfficeUiNavBar',
-        'OfficeUiContextualMenu'], function($, ko, htmlTemplate, NavigationViewModelRef, TaxonomyModuleRef, UtilityModuleRef) {
-            
-    
+        'OfficeUiContextualMenu'], function($, ko, amplify, htmlTemplate, NavigationViewModelRef, TaxonomyModuleRef, UtilityModuleRef) {
+               
     var taxonomyModule = new TaxonomyModuleRef();
     var utilityModule = new UtilityModuleRef();
 
@@ -30,10 +30,16 @@ define(['jQuery',
                 
         if (localStorage.mainMenuNodes != null) {
 
+            var navigationTree = JSON.parse(localStorage.mainMenuNodes);
+            
             // Make sure there is a value in the cache
-            if (JSON.parse(localStorage.mainMenuNodes).length > 0) {               
+            if (navigationTree.length > 0) {  
+                             
                 // Load navigation tree from the local storage browser cache
-                self.initialize(JSON.parse(localStorage.mainMenuNodes));    
+                self.initialize(navigationTree);  
+                
+                // Publish the data to all subscribers (contextual menu and breadcrumb) 
+                amplify.publish( "mainMenuNodes", { nodes: navigationTree } );
                 
                 isCached = true;            
             }          
@@ -42,11 +48,14 @@ define(['jQuery',
         if (!isCached) {
             
             // Initialize the main menu with taxonomy terms            
-            taxonomyModule.getNavigationTaxonomyNodes(params.termSetId, false)
+            taxonomyModule.getNavigationTaxonomyNodes(params.termSetId)
                 .done(function (navigationTree) {
                     
                     // Initialize the mainMenu view model
                     self.initialize(navigationTree);
+                     
+                    // Publish the data to all subscribers (contextual menu and breadcrumb) 
+                    amplify.publish( "mainMenuNodes", { nodes: navigationTree } );
                                                                     
                     // Set the navigation tree in the local storage of the browser
                     localStorage.mainMenuNodes = utilityModule.stringifyTreeObject(navigationTree);

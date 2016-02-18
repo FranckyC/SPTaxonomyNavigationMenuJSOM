@@ -66,6 +66,7 @@ Add-SPOFile -Path ".\App\main.js" -Folder "/Style Library/NavigationSample/App" 
 Add-SPOFile -Path ".\App\require.js" -Folder "/Style Library/NavigationSample/App" -Checkout
 Add-SPOFile -Path ".\App\Lib\jquery-2.2.0.min.js" -Folder "/Style Library/NavigationSample/App/Lib/" -Checkout
 Add-SPOFile -Path ".\App\Lib\knockout-3.4.0.js" -Folder "/Style Library/NavigationSample/App/Lib/" -Checkout
+Add-SPOFile -Path ".\App\Lib\amplify.min.js" -Folder "/Style Library/NavigationSample/App/Lib/" -Checkout
 Add-SPOFile -Path ".\App\Plugins\domReady.js" -Folder "/Style Library/NavigationSample/App/Plugins/" -Checkout
 Add-SPOFile -Path ".\App\Plugins\text.js" -Folder "/Style Library/NavigationSample/App/Plugins/" -Checkout
 Add-SPOFile -Path ".\App\Components\component.contextualmenu.js" -Folder "/Style Library/NavigationSample/App/Components/" -Checkout
