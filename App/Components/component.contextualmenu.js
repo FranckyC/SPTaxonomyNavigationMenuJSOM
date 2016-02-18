@@ -5,23 +5,13 @@ define(['jQuery',
         'Knockout',
         'text!Templates/template.contextualmenu.html', 
         'NavigationViewModel',
-        'TaxonomyModule'], function($, ko, htmlTemplate, NavigationViewModelRef, TaxonomyModuleRef) {
+        'TaxonomyModule',
+        'UtilityModule',
+        'OfficeUiContextualMenu'], function($, ko, htmlTemplate, NavigationViewModelRef, TaxonomyModuleRef, UtilityModuleRef) {
             
     var taxonomyModule = new TaxonomyModuleRef();
-    
-    var getNodeByFriendlyUrlSegment =  function (nodes, currentFriendlyUrlSegment) {
-        
-        if (nodes) {
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].FriendlyUrlSegment == currentFriendlyUrlSegment) {
-                    return nodes[i];
-                }
-                var found = getNodeByFriendlyUrlSegment(nodes[i].ChildNodes, currentFriendlyUrlSegment);
-                if (found) return found;
-            }
-        }
-    }
-       
+    var utilityModule = new UtilityModuleRef();
+           
     function contextualMenuComponent(params) {
                 
         var self = this;
@@ -46,12 +36,12 @@ define(['jQuery',
                 var navigationTree = nodes;
                         
                 // Get the current node from the current URL
-                var currentFriendlyUrlSegment = window.location.href.replace(/\/$/g, '').split('?')[0].split('/').pop();
-                var currentNode = getNodeByFriendlyUrlSegment(nodes, currentFriendlyUrlSegment);
+                var currentFriendlyUrlSegment = utilityModule.getCurrentFriendlyUrlSegment();
+                var currentNode = utilityModule.getNodeByFriendlyUrlSegment(nodes, currentFriendlyUrlSegment);
                 
                 // If there is no 'ParentFriendlyUrlSegment', this is a root term
                 if (currentNode.ParentFriendlyUrlSegment != null) {
-                    navigationTree = getNodeByFriendlyUrlSegment(nodes, currentNode.ParentFriendlyUrlSegment);
+                    navigationTree = utilityModule.getNodeByFriendlyUrlSegment(nodes, currentNode.ParentFriendlyUrlSegment);
                     
                     if (navigationTree.ChildNodes.length > 0) {
                         // Display all siblings and child nodes from the current node (just like the CSOM results)

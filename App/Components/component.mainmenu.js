@@ -6,7 +6,10 @@ define(['jQuery',
         'text!Templates/template.mainmenu.html', 
         'NavigationViewModel',
         'TaxonomyModule',
-        'UtilityModule'], function($, ko, htmlTemplate, NavigationViewModelRef, TaxonomyModuleRef, UtilityModuleRef) {
+        'UtilityModule',  
+        'OfficeUiNavBar',
+        'OfficeUiContextualMenu'], function($, ko, htmlTemplate, NavigationViewModelRef, TaxonomyModuleRef, UtilityModuleRef) {
+            
     
     var taxonomyModule = new TaxonomyModuleRef();
     var utilityModule = new UtilityModuleRef();

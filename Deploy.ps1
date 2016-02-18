@@ -56,6 +56,7 @@ $Context.Dispose()
 # -----------------
 Add-SPOFile -Path ".\App\Templates\template.mainmenu.html" -Folder "/Style Library/NavigationSample/App/Templates" -Checkout
 Add-SPOFile -Path ".\App\Templates\template.contextualmenu.html" -Folder "/Style Library/NavigationSample/App/Templates" -Checkout
+Add-SPOFile -Path ".\App\Templates\template.breadcrumb.html" -Folder "/Style Library/NavigationSample/App/Templates" -Checkout
 Add-SPOFile -Path ".\App\ViewModels\viewmodel.navigation.js" -Folder "/Style Library/NavigationSample/App/ViewModels" -Checkout
 Add-SPOFile -Path ".\App\Modules\module.taxonomy.js" -Folder "/Style Library/NavigationSample/App/Modules" -Checkout
 Add-SPOFile -Path ".\App\Modules\module.utility.js" -Folder "/Style Library/NavigationSample/App/Modules" -Checkout
@@ -69,6 +70,7 @@ Add-SPOFile -Path ".\App\Plugins\domReady.js" -Folder "/Style Library/Navigation
 Add-SPOFile -Path ".\App\Plugins\text.js" -Folder "/Style Library/NavigationSample/App/Plugins/" -Checkout
 Add-SPOFile -Path ".\App\Components\component.contextualmenu.js" -Folder "/Style Library/NavigationSample/App/Components/" -Checkout
 Add-SPOFile -Path ".\App\Components\component.mainmenu.js"-Folder "/Style Library/NavigationSample/App/Components/" -Checkout
+Add-SPOFile -Path ".\App\Components\component.breadcrumb.js"-Folder "/Style Library/NavigationSample/App/Components/" -Checkout
 
 # -----------------
 # Add CSS and Js links to all pages

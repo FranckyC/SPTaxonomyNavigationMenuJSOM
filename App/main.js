@@ -26,7 +26,7 @@ require.config({
 		// Office UI Fabric scripts
 		'OfficeUiNavBar' : 'OfficeUI/Jquery.NavBar',
 		'OfficeUiContextualMenu' : 'OfficeUI/Jquery.ContextualMenu',
-		
+
 		// Application modules
 		'TaxonomyModule' :  'Modules/module.taxonomy',
         'UtilityModule' : 'Modules/module.utility',
@@ -65,7 +65,7 @@ require.config({
 		'OfficeUiContextualMenu' : {
 			deps: ['jQuery']
         },
-		
+        		
 		'TaxonomyModule' : {
 			deps: ['SP_Js', 'SP_TaxonomyJs', 'SP_PublishingJs']
         },
@@ -75,8 +75,7 @@ require.config({
 require(['domReady!',
 		'jQuery', 
 		'Knockout',
-		'OfficeUiNavBar',
-		'OfficeUiContextualMenu','text!'],
+        'text!'],
 		function (domReady, $, ko) {
             
 	// At this moment, the DOM is already ready ;) (via domReady! dependency)
@@ -85,7 +84,8 @@ require(['domReady!',
     // Add your component registration here  
     // Components files are loaded on demand via Require JS
     ko.components.register('component-mainmenu', { require: 'Components/component.mainmenu' });   
-    ko.components.register('component-contextualmenu', { require: 'Components/component.contextualmenu' });   
+    ko.components.register('component-contextualmenu', { require: 'Components/component.contextualmenu' });  
+    ko.components.register('component-breadcrumb', { require: 'Components/component.breadcrumb' });    
     
 	// Insert the navbar component on the top of the "Oslo" master page
     // For this example, we use the "Site map" term set as main menu data source

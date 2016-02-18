@@ -23,6 +23,29 @@ define([], function () {
                 
              return stringified;
          } 
+         
+         
+        this.getNodeByFriendlyUrlSegment =  function (nodes, currentFriendlyUrlSegment) {
+        
+            if (nodes) {
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i].FriendlyUrlSegment == currentFriendlyUrlSegment) {
+                        return nodes[i];
+                    }
+                    var found = this.getNodeByFriendlyUrlSegment(nodes[i].ChildNodes, currentFriendlyUrlSegment);
+                    if (found) return found;
+                }
+            }
+        }
+        
+        this.getCurrentFriendlyUrlSegment = function () {
+            
+            var currentFriendlyUrlSegment = window.location.href.replace(/\/$/g, '').split('?')[0].split('/').pop();
+            
+            return currentFriendlyUrlSegment;
+        }
+        
+        
     }
 
     return utilityModule  

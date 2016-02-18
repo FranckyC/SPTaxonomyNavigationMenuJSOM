@@ -1,14 +1,17 @@
 // ====================
 // Navigation view model
 // ====================
-define(['jQuery','Knockout'], function ($, ko) {
+define(['jQuery','Knockout', 'UtilityModule'], function ($, ko, UtilityModuleRef) {
 
 	var navigationModule = function(){
 		
 		var navigationMenu = this;
+        var utilityModule = new UtilityModuleRef();
         		   
 		// Public properties
 		navigationMenu.nodes = ko.observableArray();
+        
+        navigationMenu.siteServerRelativeUrl = _spPageContextInfo.siteServerRelativeUrl;
 
 		// Public functions
 		navigationMenu.initialize = function (nodes) {
@@ -30,6 +33,7 @@ define(['jQuery','Knockout'], function ($, ko) {
 			self.url = ko.observable(node.Url);
 			self.iconCssClass = ko.observable(node.IconCssClass);
 			self.hasChildren = ko.observable(node.ChildNodes.length > 0);
+            self.hasParent = ko.observable(node.ParentFriendlyUrlSegment != null);
 			self.children = ko.observableArray();
             self.friendlyUrlSegment = ko.observable(node.FriendlyUrlSegment);          
             self.isCurrentNode = ko.pureComputed(function() {
@@ -37,7 +41,7 @@ define(['jQuery','Knockout'], function ($, ko) {
                 var isCurrent = false;
                 
                 // If the friendly URL segment matches the current URL segment, the node is the current node
-                var currentFriendlyUrlSegment = window.location.href.replace(/\/$/g, '').split('?')[0].split('/').pop();
+                var currentFriendlyUrlSegment = utilityModule.getCurrentFriendlyUrlSegment();
                 if(currentFriendlyUrlSegment.localeCompare(self.friendlyUrlSegment()) == 0) {
                     isCurrent = true;
                 }
