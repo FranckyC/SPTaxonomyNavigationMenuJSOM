@@ -100,9 +100,13 @@ $SiteMapTermSetId = "<your_term_set_id>"
 ```
 Your term set must be flagged as a navigation term set.
 
-Main menu nodes are cached in the browser local storage. To clear the local storage value, just delete the value `mainMenuNodes` and reload the page.
+#### Caching
 
-![Delete the local storage value](http://thecollaborationcorner.com/wp-content/uploads/2016/02/final_local_storage2.png)
+The main menu nodes are automatically cached during the first load in the browser local storage under the value `mainMenuNodes`. Any other subsequent requests will use the cache value instead of making a CSOM call. To clear the cache for every users, you can set the custom property of the term set `NoCache` to `true`. No custom property or other value will result to continue using the cache value.
+
+![Local storage value](http://thecollaborationcorner.com/wp-content/uploads/2016/02/final_local_storage2.png)
+
+![Reset the local storage value from term set](http://thecollaborationcorner.com/wp-content/uploads/2016/02/final_nocache.png)
 
 #### Icons configuration
 

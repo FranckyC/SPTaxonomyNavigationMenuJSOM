@@ -3,9 +3,34 @@
 // ====================
 define([], function () {
 	
-	var taxonomyModule = function(){
+	var taxonomyModule = function() {
+                
+        this.getTermSetCustomPropertyValue = function (termSetId, customPropertyName) {
+            
+            var deferred = new $.Deferred();
+            var context = SP.ClientContext.get_current();
+
+			var taxSession = SP.Taxonomy.TaxonomySession.getTaxonomySession(context);
+			var termStore = taxSession.getDefaultSiteCollectionTermStore();
+			var termSet = termStore.getTermSet(termSetId);
+            
+            context.load(termSet, "CustomProperties");       
+            
+            context.executeQueryAsync(function () {
+
+				var propertyValue = termSet.get_objectData().get_properties()["CustomProperties"][customPropertyName] !== undefined ? termSet.get_objectData().get_properties()["CustomProperties"][customPropertyName] : "";
+			
+				deferred.resolve(propertyValue);
+
+			}, function (sender, args) {
+
+				deferred.reject(sender, args);
+			});
+
+			return deferred.promise();      
+        };
 	
-		this.getNavigationTaxonomyNodes = function (termSetId, restrictToCurrentTerm) {
+		this.getNavigationTaxonomyNodes = function (termSetId) {
 
 			var deferred = new $.Deferred();
 
@@ -78,13 +103,13 @@ define([], function () {
 						"IconCssClass" : "",
                         "ExcludeFromGlobalNavigation" : currentTerm.get_excludeFromGlobalNavigation(),
                         "ExcludeFromCurrentNavigation" : currentTerm.get_excludeFromCurrentNavigation()
-					}
+					};
 									
 					getNavigationTermUrl(context, currentTerm).then(function (termUrl) {
 
 						termNode.Url = termUrl;
-						
-						getNavigationTermIconCssClass(context, currentTerm).then(function (iconCssClass) {
+                        
+						getTermCustomPropertyValue(context, currentTerm.getTaxonomyTerm(), "IconCssClass").then(function (iconCssClass) {
 								
 							termNode.IconCssClass = iconCssClass;
 							termNodes.push(termNode);
@@ -106,7 +131,7 @@ define([], function () {
 			var termsEnumerator = allTerms.getEnumerator();
 			var termCount = allTerms.get_count();
 			var i = 0;
-			var termNodes = new Array();
+			var termNodes = [];
 
 			termsEnumerator.moveNext();
 			getSingleTermNodeInfo(function (navNodes) {
@@ -116,12 +141,12 @@ define([], function () {
 			});
 
 			return deferred.promise();
-		}
+		};
 	 
 		// Find a specific navigation term in the flat list of all navigation terms
 		var findTermNode = function (allTerms, termId) {
 	 
-			for (i = 0; i < allTerms.length; i++) {
+			for (var i = 0; i < allTerms.length; i++) {
 
 				if (allTerms[i].Id.localeCompare(termId.toString()) === 0)
 				{
@@ -129,13 +154,13 @@ define([], function () {
 				}
 			}
 			return null;
-		}
+		};
 
 		var getTermNodesAsTree = function (context, allTerms, currentNodeTerms, parentFriendlyUrlSegment) {
 
 			// Special thanks to this blog post:  https://social.msdn.microsoft.com/Forums/office/en-US/ede1aa39-4c47-4308-9aef-3b036ec9b318/get-navigation-taxonomy-term-tree-in-sharepoint-app?forum=appsforsharepoint
 			var termsEnumerator = currentNodeTerms.getEnumerator();
-			var termNodes = new Array();
+			var termNodes = [];
 
 			while (termsEnumerator.moveNext()) {
 
@@ -158,7 +183,7 @@ define([], function () {
 			}
 
 			return termNodes;
-		}
+		};
 
 		var getNavigationTermUrl = function (context, navigationTerm) {
 
@@ -178,20 +203,18 @@ define([], function () {
 				deferred.reject(sender, args);
 			});
 
-			return deferred.promise()
-		}
-		
-		var getNavigationTermIconCssClass = function (context, navigationTerm)	{
+			return deferred.promise();
+		};
+        
+        var getTermCustomPropertyValue = function (context, taxonomyTerm, customPropertyName) {
 			
 			var deferred = new $.Deferred();
 			
-			var taxonomyTerm = navigationTerm.getTaxonomyTerm();
-
 			context.load(taxonomyTerm, 'CustomProperties');
 
 			context.executeQueryAsync(function () {
 
-				var iconCssClass = taxonomyTerm.get_objectData().get_properties()["CustomProperties"]["IconCssClass"] != undefined ? taxonomyTerm.get_objectData().get_properties()["CustomProperties"]["IconCssClass"] : "";
+				var iconCssClass = taxonomyTerm.get_objectData().get_properties()["CustomProperties"][customPropertyName] !== undefined ? taxonomyTerm.get_objectData().get_properties()["CustomProperties"][customPropertyName] : "";
 			
 				deferred.resolve(iconCssClass);
 
@@ -200,9 +223,9 @@ define([], function () {
 				deferred.reject(sender, args);
 			});
 
-			return deferred.promise()			
-		}
-          
+			return deferred.promise();			
+		};
+		          
         var onError = function (sender, args) {
             console.log('Error. ' + args.get_message() + '\n' + args.get_stackTrace());
         };

@@ -33,7 +33,7 @@ define(['jQuery',
             var currentNode = utilityModule.getNodeByFriendlyUrlSegment(data.nodes, currentFriendlyUrlSegment);
             
             // If there is no 'ParentFriendlyUrlSegment', this is a root term
-            if (currentNode.ParentFriendlyUrlSegment != null) {
+            if (currentNode.ParentFriendlyUrlSegment !== null) {
                 navigationTree = utilityModule.getNodeByFriendlyUrlSegment(data.nodes, currentNode.ParentFriendlyUrlSegment);
                 
                 if (navigationTree.ChildNodes.length > 0) {

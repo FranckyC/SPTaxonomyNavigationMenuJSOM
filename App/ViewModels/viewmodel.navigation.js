@@ -22,18 +22,18 @@ define(['jQuery','Knockout', 'UtilityModule'], function ($, ko, UtilityModuleRef
 		var populateObservableNodeArray = function (nodes, observableArray) {
 			
 			for (var i = 0; i < nodes.length; i++) {
-				observableArray.push(new nodeViewModel(nodes[i]));
+				observableArray.push(new NodeViewModel(nodes[i]));
 			}
 		};
 
-		var nodeViewModel = function (node) {
+		var NodeViewModel = function (node) {
 			var self = this;
 
 			self.title = ko.observable(node.Title);
 			self.url = ko.observable(node.Url);
 			self.iconCssClass = ko.observable(node.IconCssClass);
 			self.hasChildren = ko.observable(node.ChildNodes.length > 0);
-            self.hasParent = ko.observable(node.ParentFriendlyUrlSegment != null);
+            self.hasParent = ko.observable(node.ParentFriendlyUrlSegment !== null);
 			self.children = ko.observableArray();
             self.friendlyUrlSegment = ko.observable(node.FriendlyUrlSegment);          
             self.isCurrentNode = ko.pureComputed(function() {
@@ -42,7 +42,7 @@ define(['jQuery','Knockout', 'UtilityModule'], function ($, ko, UtilityModuleRef
                 
                 // If the friendly URL segment matches the current URL segment, the node is the current node
                 var currentFriendlyUrlSegment = utilityModule.getCurrentFriendlyUrlSegment();
-                if(currentFriendlyUrlSegment.localeCompare(self.friendlyUrlSegment()) == 0) {
+                if(currentFriendlyUrlSegment.localeCompare(self.friendlyUrlSegment()) === 0) {
                     isCurrent = true;
                 }
                 return isCurrent;

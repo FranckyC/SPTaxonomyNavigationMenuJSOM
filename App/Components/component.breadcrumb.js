@@ -12,17 +12,17 @@ define(['jQuery',
         
     var getBreadcrumbNodes = function (nodes) {
   
-        var breadcrumbNodes = new Array();   
+        var breadcrumbNodes = [];   
            
         // Get the current node from the current URL
         var currentFriendlyUrlSegment = utilityModule.getCurrentFriendlyUrlSegment();
         var currentNode = utilityModule.getNodeByFriendlyUrlSegment(nodes, currentFriendlyUrlSegment);
 
-        if (currentNode != undefined) {
+        if (currentNode !== undefined) {
          
             breadcrumbNodes.push(currentNode);                         
 
-            while (currentNode.ParentFriendlyUrlSegment != null) {                    
+            while (currentNode.ParentFriendlyUrlSegment !== null) {                    
                 var parentNode = utilityModule.getNodeByFriendlyUrlSegment(nodes, currentNode.ParentFriendlyUrlSegment);
                 breadcrumbNodes.push(parentNode);
                 currentNode = parentNode;
@@ -32,7 +32,7 @@ define(['jQuery',
         }
         
         return breadcrumbNodes;
-    }
+    };
 
     function breadcrumbComponent(params) {
                 

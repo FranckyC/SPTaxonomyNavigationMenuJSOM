@@ -3,7 +3,7 @@
 // ====================
 define([], function () {
  
- 	var utilityModule = function(){
+ 	var utilityModule = function() {
          
          this.stringifyTreeObject = function (object) {
                    
@@ -22,31 +22,29 @@ define([], function () {
                 cache = null;
                 
              return stringified;
-         } 
+         };
          
          
         this.getNodeByFriendlyUrlSegment =  function (nodes, currentFriendlyUrlSegment) {
         
             if (nodes) {
                 for (var i = 0; i < nodes.length; i++) {
-                    if (nodes[i].FriendlyUrlSegment == currentFriendlyUrlSegment) {
+                    if (nodes[i].FriendlyUrlSegment === currentFriendlyUrlSegment) {
                         return nodes[i];
                     }
                     var found = this.getNodeByFriendlyUrlSegment(nodes[i].ChildNodes, currentFriendlyUrlSegment);
                     if (found) return found;
                 }
             }
-        }
+        };
         
         this.getCurrentFriendlyUrlSegment = function () {
             
             var currentFriendlyUrlSegment = window.location.href.replace(/\/$|#/g, '').split('?')[0].split('/').pop();
             
             return currentFriendlyUrlSegment;
-        }
-        
-        
-    }
+        };  
+    };
 
-    return utilityModule  
+    return utilityModule;  
 });

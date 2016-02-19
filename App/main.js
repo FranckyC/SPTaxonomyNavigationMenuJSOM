@@ -85,12 +85,14 @@ require(['domReady!',
             
 	// At this moment, the DOM is already ready ;) (via domReady! dependency)
           
-    // Register all navigation components
-    // Add your component registration here  
+    // Register all components
     // Components files are loaded on demand via Require JS
     ko.components.register('component-mainmenu', { require: 'Components/component.mainmenu' });   
     ko.components.register('component-contextualmenu', { require: 'Components/component.contextualmenu' });  
     ko.components.register('component-breadcrumb', { require: 'Components/component.breadcrumb' });    
+    
+    // Add your additional component registration here  
+    // ...
     
 	// Insert the navbar component on the top of the "Oslo" master page
     // For this example, we use the "Site map" term set as main menu data source
@@ -98,7 +100,7 @@ require(['domReady!',
     $("<div class=\"ms-NavBar\"><component-mainmenu params='termSetId: \"52d6944d-bd98-48c1-ba45-57d4efe2f941\"'></component-mainmenu></div>").insertBefore(tableRow);
         	
 	// Hide the default SharePoint navigationmenu
-	$("#DeltaHorizontalQuickLaunch").hide()
+	$("#DeltaHorizontalQuickLaunch").hide();
     
     // Apply the magic!
     ko.applyBindings();	     

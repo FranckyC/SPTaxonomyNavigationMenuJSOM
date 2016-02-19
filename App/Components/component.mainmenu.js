@@ -19,6 +19,9 @@ define(['jQuery',
         var self = this;
         var isCached = false;
         
+        // Get the term set id associated to the component
+        var termSetId = params.termSetId;
+        
         // Use the existing navigation view model intialized with the term set id passed as parameter in the DOM element
         ko.utils.extend(self, new NavigationViewModelRef());
         
@@ -27,44 +30,56 @@ define(['jQuery',
             $('.ms-NavBar').NavBar();
             $('.ms-NavBar').ContextualMenu();
         }
-                
-        if (localStorage.mainMenuNodes != null) {
-
-            var navigationTree = JSON.parse(localStorage.mainMenuNodes);
-            
-            // Make sure there is a value in the cache
-            if (navigationTree.length > 0) {  
-                             
-                // Load navigation tree from the local storage browser cache
-                self.initialize(navigationTree);  
-                
-                // Publish the data to all subscribers (contextual menu and breadcrumb) 
-                amplify.publish( "mainMenuNodes", { nodes: navigationTree } );
-                
-                isCached = true;            
-            }          
-        }
         
-        if (!isCached) {
+        // Check is a manual refresh is needed (custom property "ClearCache" in the term set)
+        taxonomyModule.getTermSetCustomPropertyValue(termSetId, "NoCache").done(function (value){
             
-            // Initialize the main menu with taxonomy terms            
-            taxonomyModule.getNavigationTaxonomyNodes(params.termSetId)
-                .done(function (navigationTree) {
+            if (value === "true") {
+                // Clear the value in local storage for the component
+                localStorage.removeItem("mainMenuNodes");
+            }
+            
+            if (localStorage.mainMenuNodes !== null && localStorage.mainMenuNodes !== undefined) {
+
+                var navigationTree = JSON.parse(localStorage.mainMenuNodes);
+                
+                // Make sure there is a value in the cache
+                if (navigationTree.length > 0) {  
+                                
+                    // Load navigation tree from the local storage browser cache
+                    self.initialize(navigationTree);  
                     
-                    // Initialize the mainMenu view model
-                    self.initialize(navigationTree);
-                     
                     // Publish the data to all subscribers (contextual menu and breadcrumb) 
                     amplify.publish( "mainMenuNodes", { nodes: navigationTree } );
-                                                                    
-                    // Set the navigation tree in the local storage of the browser
-                    localStorage.mainMenuNodes = utilityModule.stringifyTreeObject(navigationTree);
-                                            
-            }).fail(function(sender, args) {
-                console.log('Error. ' + args.get_message() + '\n' + args.get_stackTrace());
-            });
-        }
-                     
+                    
+                    isCached = true;            
+                }          
+            }
+            
+            if (!isCached) {
+                
+                // Initialize the main menu with taxonomy terms            
+                taxonomyModule.getNavigationTaxonomyNodes(termSetId)
+                    .done(function (navigationTree) {
+                        
+                        // Initialize the mainMenu view model
+                        self.initialize(navigationTree);
+                        
+                        // Publish the data to all subscribers (contextual menu and breadcrumb) 
+                        amplify.publish( "mainMenuNodes", { nodes: navigationTree } );
+                                                                        
+                        // Set the navigation tree in the local storage of the browser
+                        localStorage.mainMenuNodes = utilityModule.stringifyTreeObject(navigationTree);
+                                                
+                }).fail(function(sender, args) {
+                    console.log('Error. ' + args.get_message() + '\n' + args.get_stackTrace());
+                });
+            }             
+            
+        }).fail(function (sedner, args) {
+            console.log('Error. ' + args.get_message() + '\n' + args.get_stackTrace());
+        });
+                   
         // We need a custom knockout binding to ensure DOM manipulations execute after the nav bar rendering (see the template.mainmenu.html file)
         ko.bindingHandlers.loadSearchBox = {
             init: function(elem) {
@@ -86,7 +101,7 @@ define(['jQuery',
                 // Add the input only to the nav bar
                 $(elem).append($("#searchInputBox input"));					
             }
-        }
+        };
     }
   
     // Return component definition
