@@ -1,5 +1,5 @@
 // ====================
-// Navbar component
+// Breadcrumb component
 // ====================
 define(['jQuery',
         'Knockout',
@@ -38,11 +38,11 @@ define(['jQuery',
                 
         var self = this;
         
-        // Use the existing navigation view model intialized with the term set id passed as parameter in the DOM element
+        // Use the existing navigation view model
         ko.utils.extend(self, new NavigationViewModelRef());
                         
         // Subscribe to the main menu nodes
-        amplify.subscribe( "mainMenuNodes", function(data) {
+        amplify.subscribe("mainMenuNodes", function(data) {
             self.initialize(getBreadcrumbNodes(data.nodes));
         });
     }                      
